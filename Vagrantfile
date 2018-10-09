@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
     lab05.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
     lab05.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
-  
+
   # lab06 machine
   config.vm.define "lab06" do |lab06|
     lab06.vm.box = "ubuntu/bionic64"
@@ -81,7 +81,14 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
     lab06.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
-    lab06.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys && apt-get update && apt-get -qy install ansible"
+    lab06.vm.provision :shell do |s|
+      s.inline = <<-EOF
+        cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys
+        apt-get update
+        apt-get -qy install python-minimal python-pip
+        pip install ansible hvac
+      EOF
+    end
   end
-  
+
 end
