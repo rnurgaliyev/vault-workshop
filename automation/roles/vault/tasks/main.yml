@@ -1,0 +1,53 @@
+---
+
+- name: Check if vault is installed
+  stat:
+    path: /usr/sbin/vault
+  register: vault_stat
+
+- name: Install unzip
+  apt:
+    name: unzip
+    state: present
+
+- name: Download vault to temporary path
+  get_url:
+    url: https://releases.hashicorp.com/vault/0.11.2/vault_0.11.2_linux_amd64.zip
+    checksum: "sha1:373b4d075a9cc9657dabbf412ddbd3f06d19d59e"
+    dest: /tmp/vault.zip
+    force: True
+  when: not vault_stat.stat.exists
+
+- name: Unpack vault binary
+  unarchive:
+    remote_src: True
+    src: /tmp/vault.zip
+    dest: /usr/sbin
+    mode: 0755
+  when: not vault_stat.stat.exists
+  notify: restart vault
+
+- name: Create vault configuration directory
+  file:
+    dest: /etc/vault.d
+    state: directory
+
+- name: Install vault configuration file
+  template:
+    src: config.json.j2
+    dest: "/etc/vault.d/config.json"
+  notify: restart vault
+
+- name: Install vault systemd service
+  copy:
+    src: vault.service
+    dest: "/etc/systemd/system/vault.service"
+  notify:
+    - reload systemd
+    - restart vault
+
+- name: Enable and start vault agent
+  service:
+    name: vault.service
+    enabled: True
+  notify: restart vault

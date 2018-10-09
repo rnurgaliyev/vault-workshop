@@ -1,0 +1,25 @@
+---
+
+- name: Install database server
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  loop:
+    - mysql-server
+    - python-mysqldb
+
+- name: Create database user
+  mysql_user:
+    name: "{{ database_user }}"
+    password: "{{ database_pass }}"
+    priv: '*.*:ALL'
+    host: '%'
+    state: present
+
+- name: Enable database networking
+  ini_file:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: bind-address
+    value: 0.0.0.0
+  notify: restart mysql

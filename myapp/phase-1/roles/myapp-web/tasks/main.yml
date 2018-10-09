@@ -1,0 +1,24 @@
+---
+
+- name: Install web server
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  loop:
+    - php
+    - php-mysql
+    - libapache2-mod-php
+  notify: restart apache2
+
+- name: Install web app
+  template:
+    src: "{{ item }}"
+    dest: "/var/www/html/{{ item }}"
+  loop:
+    - index.php
+    - config.inc.php
+
+- name: Remove default page
+  file:
+    path: "/var/www/html/index.html"
+    state: absent

@@ -1,0 +1,15 @@
+---
+
+- hosts: controller
+  become: False
+  gather_facts: False
+  roles:
+    - { role: bootstrap-python,       tags: "bootstrap" }
+
+- hosts: controller
+  become: True
+  gather_facts: True
+  roles:
+    - { role: common,                 tags: "common" }
+    - { role: consul,                 tags: "consul" }
+    - { role: vault,                  tags: "vault" }

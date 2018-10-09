@@ -1,0 +1,5 @@
+---
+
+- name: Bootstrap python if required
+  raw: test -e /usr/bin/python || ( sudo apt-get update && sudo apt-get -yq install python-minimal )
+  changed_when: False
