@@ -46,6 +46,12 @@
     dest: "/etc/consul.d/config.json"
   notify: restart consul
 
+- name: Configure consul services
+  template:
+    src: services.json.j2
+    dest: "/etc/consul.d/services.json"
+  notify: restart consul
+
 - name: Enable and start consul agent
   service:
     name: consul.service

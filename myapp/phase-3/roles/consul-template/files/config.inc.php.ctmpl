@@ -1,0 +1,12 @@
+<?php
+
+    # Dynamic configuration, maintained by Consul Template.
+
+    {{ range $index, $element := service "myapp-db" }}{{ if eq $index 0 }}$database_host = "{{.Address}}";{{ end }}{{ end }}
+
+    {{ with secret "secret/myapp" }}
+    $database_user = "{{ .Data.user }}";
+    $database_pass = "{{ .Data.pass }}";
+    {{ end }}
+
+?>

@@ -1,0 +1,24 @@
+---
+
+- hosts: myapp-db,myapp-web
+  become: False
+  gather_facts: False
+  roles:
+    - { role: bootstrap-python,       tags: "bootstrap" }
+
+- hosts: myapp-db
+  become: True
+  gather_facts: True
+  roles:
+    - { role: common,                 tags: "common" }
+    - { role: consul,                 tags: "consul" }
+    - { role: myapp-db,               tags: "myapp-db" }
+
+- hosts: myapp-web
+  become: True
+  gather_facts: True
+  roles:
+    - { role: common,                 tags: "common" }
+    - { role: consul,                 tags: "consul" }
+    - { role: consul-template,        tags: "consul" }
+    - { role: myapp-web,              tags: "myapp-web" }

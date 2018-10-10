@@ -12,7 +12,7 @@
 
 - name: Install web app
   template:
-    src: "{{ item }}"
+    src: "{{ item }}.j2"
     dest: "/var/www/html/{{ item }}"
   loop:
     - index.php
