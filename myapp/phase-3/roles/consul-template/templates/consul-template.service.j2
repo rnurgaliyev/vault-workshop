@@ -9,8 +9,8 @@ RestartSec=5
 ExecStart=/usr/sbin/consul-template -config=/etc/consul-template.d
 KillMode=process
 KillSignal=9
-Environment=VAULT_ADDR={{ vault_addr }}
-Environment=VAULT_TOKEN={{ vault_token }}
+Environment=VAULT_ADDR={{ vault_addr | default(lookup('env','VAULT_ADDR')) }}
+Environment=VAULT_TOKEN={{ vault_token | default(lookup('env','VAULT_TOKEN')) }}
 
 [Install]
 WantedBy=multi-user.target

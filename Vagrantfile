@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab01.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab01.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
     lab01.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
 
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab02.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab02.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
     lab02.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
 
@@ -38,7 +38,7 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab03.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab03.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
     lab03.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
 
@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab04.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab04.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
     lab04.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
 
@@ -66,7 +66,7 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab05.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab05.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
     lab05.vm.provision :shell, inline: "cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys"
   end
 
@@ -80,10 +80,15 @@ Vagrant.configure("2") do |config|
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
       vb.customize [ "modifyvm", :id, "--natdnshostresolver1", "on" ]
     end
-    lab06.vm.provision :file, source: "~/.ssh/id_rsa.pub", destination: "/tmp/host.pub"
+    lab06.vm.provision :file, source: "id_rsa.pub", destination: "/tmp/host.pub"
+    lab06.vm.provision :file, source: "id_rsa", destination: "/tmp/host.key"
     lab06.vm.provision :shell do |s|
       s.inline = <<-EOF
         cat /tmp/host.pub >> ~ubuntu/.ssh/authorized_keys
+        cat /tmp/host.pub >> ~ubuntu/.ssh/id_rsa.pub
+        cat /tmp/host.key >> ~ubuntu/.ssh/id_rsa
+        chmod 600 ~ubuntu/.ssh/id_rsa
+        chown -R ubuntu:ubuntu ~ubuntu/.ssh
         apt-get update
         apt-get -qy install python-minimal python-pip
         pip install ansible hvac
