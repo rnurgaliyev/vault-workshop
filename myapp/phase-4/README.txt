@@ -4,7 +4,6 @@ $ sudo -i
 $ mysql
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'vault'@'%' IDENTIFIED BY '1q2w3e4r5t';
 mysql> GRANT GRANT OPTION ON *.* TO 'vault'@'%';
-mysql> FLUSH PRIVILEGES;
 
 Create Vault dynamic secret (any controller machine):
 
